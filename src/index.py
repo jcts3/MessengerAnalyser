@@ -2,13 +2,17 @@ from bs4 import BeautifulSoup
 
 import pandas as pd
 import datetime
+import csv
 
 print('starting soup')
 with open("messages/jamesstratford_koy9e4bcga.1/message.html") as fp:
     soup = BeautifulSoup(fp, 'lxml')
 print('soup made')
 
-columns = ['Date', 'Time', 'Person', 'Message']
+columns = ['Index', 'Date', 'Time', 'Person', 'Message']
+
+csvfile = csv.writer(open('../csv/chatdata.csv', 'w'))
+csvfile.writerow(columns)
 
 def createPandaDF():
     print('creating pandas')
@@ -27,9 +31,7 @@ def createPandaDF():
         except:
             print('no text')
             text = '***NO TEXT***'
-        obj = {date, dateTid[3], person, text}
-        # df.append(obj)
-        print('done')
+        csvfile.writerow(obj)
         
 def convertDate(dateTid):
     datum = dateTid[0]
