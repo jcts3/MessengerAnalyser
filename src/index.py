@@ -4,17 +4,31 @@ import pandas as pd
 import datetime
 import csv
 
-print('starting soup')
-with open("../messages/jamesstratford_koy9e4bcga.1/message.html") as fp:
-    soup = BeautifulSoup(fp, 'lxml')
-print('soup made')
-
 columns = ['Index', 'Date', 'Time', 'Person', 'Message']
 
-csvfile = csv.writer(open('../csv/chatdata.csv', 'w'))
-csvfile.writerow(columns)
+def main():
+    soup = getSoup()
+    csvF = createCSV(soup)
+    df = createPandaDF(soup, csvF)
 
-def createPandaDF():
+def getSoup():
+    print('starting soup')
+    #with open("../messages/jamesstratford_koy9e4bcga.1/message.html") as fp:
+    with open ("../messages/johannaohlman_a8qbtcj2yq.1/message.html") as fp:
+        soup = BeautifulSoup(fp, 'lxml')
+    name = soup.title.string
+    print(f'soup made for conversation with {name}')
+    return soup
+
+def createCSV(soup):
+    name = soup.title.string
+    directory = f'../csv/{name}.csv'
+    csvfile = csv.writer(open(directory, 'w'))
+    csvfile.writerow(columns)
+    print(f'File to be written to {directory}.')
+    return csvfile
+
+def createPandaDF(soup, csvfile):
     print('creating pandas')
     messages = soup.body.find_all("div", class_="pam _3-95 _2pi0 _2lej uiBoxWhite noborder")
     print(len(messages))
@@ -56,6 +70,7 @@ def convertDate(dateTid):
     return date
 
 #df2 = createPandaDF()
+main()
 print('properly done')
 # for message in messages
 
